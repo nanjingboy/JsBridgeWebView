@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <div id="responsePanel"></div>
+        <Button onclick="onCallNativeButtonClicked()">Call Native</Button>
+    </body>
+
+    <script type="text/javascript">
+        function onCallNativeButtonClicked() {
+          setupJsBridgeWebView(function(bridge) {
+            bridge.callHandler("callNative", null, function(response) {
+                document.getElementById("responsePanel").innerHTML = response;
+            });
+          });
+        }
+    </script>
+</html>

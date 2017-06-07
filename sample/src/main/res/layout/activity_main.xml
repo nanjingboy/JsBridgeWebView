@@ -3,9 +3,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <TextView
-        android:gravity="center"
+    <me.tom.jsbridgewebview.JsBridgeWebView
+        android:id="@+id/webView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Hello world"/>
+        android:layout_height="match_parent"/>
 </LinearLayout>
