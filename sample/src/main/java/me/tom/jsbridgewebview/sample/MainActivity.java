@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
@@ -28,7 +29,12 @@ public class MainActivity extends AppCompatActivity {
         webView.registerHandler("callNative", new JsBridgeHandler() {
             @Override
             public void handler(JSONObject data, JsBridgeCallBack callBack) {
-                callBack.onCallback("Response from native");
+                try {
+                    JSONObject response = new JSONObject();
+                    response.put("message", "Response from native");
+                    callBack.onCallback(response);
+                } catch (JSONException e) {
+                }
             }
         });
     }

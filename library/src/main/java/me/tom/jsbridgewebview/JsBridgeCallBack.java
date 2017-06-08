@@ -1,5 +1,7 @@
 package me.tom.jsbridgewebview;
 
+import org.json.JSONObject;
+
 import java.lang.ref.WeakReference;
 
 public class JsBridgeCallBack {
@@ -12,14 +14,14 @@ public class JsBridgeCallBack {
         mWebViewRef = new WeakReference<>(webView);
     }
 
-    public void onCallback(String data) {
+    public void onCallback(JSONObject data) {
         JsBridgeWebView webView = mWebViewRef.get();
         if (webView == null) {
             return;
         }
-        if (data == null || data.length() == 0) {
-            data = "";
+        if (data == null) {
+            data = new JSONObject();
         }
-        webView.loadUrl("javascript:window.jsBridgeWebView.callbackHandler('" + data + "','" + mCallBackId + "')");
+        webView.loadUrl("javascript:window.jsBridgeWebView.callbackHandler('" + data.toString() + "','" + mCallBackId + "')");
     }
 }

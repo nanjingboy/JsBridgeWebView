@@ -9,7 +9,7 @@
         function onCallNativeButtonClicked() {
           setupJsBridgeWebView(function(bridge) {
             bridge.callHandler("callNative", null, function(response) {
-                document.getElementById("responsePanel").innerHTML = response;
+                document.getElementById("responsePanel").innerHTML = JSON.stringify(response);
             });
           });
         }

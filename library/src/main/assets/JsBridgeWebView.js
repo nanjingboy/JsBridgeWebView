@@ -21,11 +21,7 @@
        var callback = responseCallbacks[callbackId];
        if (typeof callback === 'function') {
          if (data.length > 0) {
-           try {
-             callback(JSON.parse(data))
-           } catch(error) {
-             callback(data);
-           }
+           callback(JSON.parse(data));
          } else {
            callback(null);
          }
