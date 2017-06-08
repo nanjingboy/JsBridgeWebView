@@ -1,9 +1,14 @@
 (function() {
+  var readyEvent,
+    handlers,
+    responseCallbacks;
+
   if (window.jsBridgeWebView) {
     return;
   }
 
-  var responseCallbacks = {};
+  handlers = {};
+  responseCallbacks = {};
   window.jsBridgeWebView = {
      callHandler: function(name, arguments, callback) {
        var data = {
@@ -17,34 +22,33 @@
        window.jsBridgeWebViewInterface.callNativeHandler(JSON.stringify(data));
      },
 
-     callbackHandler: function(data, callbackId) {
+     registerHandler: function(name, callback) {
+        handlers[name] = callback
+     },
+
+     _nativeCallbackHandler: function(data, callbackId) {
        var callback = responseCallbacks[callbackId];
        if (typeof callback === 'function') {
-         if (data.length > 0) {
-           callback(JSON.parse(data));
-         } else {
-           callback(null);
-         }
+         callback(JSON.parse(data));
          delete(responseCallbacks[callbackId]);
+       }
+     },
+
+     _callJsHandler: function(name, data) {
+       var handler = handlers[name];
+       if (typeof handler === 'function') {
+         handler(JSON.parse(data), function(response) {
+           var options = {
+              name: name,
+              response: response
+           };
+           window.jsBridgeWebViewInterface.jsCallbackHandler(JSON.stringify(options));
+         });
        }
      }
   };
 
-  var readyEvent = document.createEvent('Events');
+  readyEvent = document.createEvent('Events');
   readyEvent.initEvent('jsBridgeWebViewReady');
   document.dispatchEvent(readyEvent);
-
-  window.setupJsBridgeWebView = function(callback) {
-    if (window.jsBridgeWebView) {
-      callback(window.jsBridgeWebView);
-    } else {
-      document.addEventListener(
-        'jsBridgeWebViewReady',
-        function() {
-          callback(window.jsBridgeWebView);
-        },
-        false
-      );
-    }
-  };
 })();

@@ -6,4 +6,7 @@ public interface JsBridgeJavaScriptInterface {
 
     @JavascriptInterface
     void callNativeHandler(String data);
+
+    @JavascriptInterface
+    void jsCallbackHandler(String data);
 }

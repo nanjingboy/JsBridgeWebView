@@ -4,12 +4,12 @@ import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 
-public class JsBridgeCallBack {
+public class JsBridgeNativeCallBack {
 
     private String mCallBackId;
     private WeakReference<JsBridgeWebView> mWebViewRef;
 
-    public JsBridgeCallBack(JsBridgeWebView webView, String callbackId) {
+    public JsBridgeNativeCallBack(JsBridgeWebView webView, String callbackId) {
         mCallBackId = callbackId;
         mWebViewRef = new WeakReference<>(webView);
     }
@@ -22,6 +22,6 @@ public class JsBridgeCallBack {
         if (data == null) {
             data = new JSONObject();
         }
-        webView.loadUrl("javascript:window.jsBridgeWebView.callbackHandler('" + data.toString() + "','" + mCallBackId + "')");
+        webView.loadUrl("javascript:window.jsBridgeWebView._nativeCallbackHandler('" + data.toString() + "','" + mCallBackId + "')");
     }
 }

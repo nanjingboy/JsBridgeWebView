@@ -17,7 +17,8 @@ public class JsBridgeWebView extends WebView {
 
     private long mPreTouchTime;
 
-    private HashMap<String, JsBridgeHandler> mHandlers;
+    private HashMap<String, JsBridgeNativeHandler> mNativeHandlers;
+    private HashMap<String, JsBridgeJsCallbackHandler> mJsCallbackHandlers;
 
     public JsBridgeWebView(Context context) {
         this(context, null);
@@ -29,7 +30,8 @@ public class JsBridgeWebView extends WebView {
 
     public JsBridgeWebView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        mHandlers = new HashMap<>();
+        mNativeHandlers = new HashMap<>();
+        mJsCallbackHandlers = new HashMap<>();
         getSettings().setJavaScriptEnabled(true);
         getSettings().setDomStorageEnabled(true);
         getSettings().setUseWideViewPort(true);
@@ -47,15 +49,15 @@ public class JsBridgeWebView extends WebView {
                         try {
                             JSONObject options = new JSONObject(data);
                             String name = options.getString("name");
-                            if (mHandlers.containsKey(name)) {
-                                JsBridgeCallBack callBack = new JsBridgeCallBack(
+                            if (mNativeHandlers.containsKey(name)) {
+                                JsBridgeNativeCallBack callBack = new JsBridgeNativeCallBack(
                                         JsBridgeWebView.this,
                                         options.getString("callbackId")
                                 );
                                 if (options.isNull("arguments")) {
-                                    mHandlers.get(name).handler(null, callBack);
+                                    mNativeHandlers.get(name).handler(null, callBack);
                                 } else {
-                                    mHandlers.get(name).handler(options.getJSONObject("arguments"), callBack);
+                                    mNativeHandlers.get(name).handler(options.getJSONObject("arguments"), callBack);
                                 }
                             }
                         } catch (JSONException e) {
@@ -63,11 +65,39 @@ public class JsBridgeWebView extends WebView {
                     }
                 });
             }
+
+            @Override
+            @JavascriptInterface
+            public void jsCallbackHandler(final String data) {
+                ((Activity) getContext()).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            JSONObject options = new JSONObject(data);
+                            String name = options.getString("name");
+                            if (mJsCallbackHandlers.containsKey(name)) {
+                                if (options.isNull("response")) {
+                                    mJsCallbackHandlers.get(name).handler(null);
+                                } else {
+                                    mJsCallbackHandlers.get(name).handler(options.getJSONObject("response"));
+                                }
+                            }
+                        } catch (JSONException e) {
+                        }
+                    }
+                });
+
+            }
         }, "jsBridgeWebViewInterface");
     }
 
-    public void registerHandler(String name, JsBridgeHandler handler) {
-        mHandlers.put(name, handler);
+    public void registerHandler(String name, JsBridgeNativeHandler handler) {
+        mNativeHandlers.put(name, handler);
+    }
+
+    public void callHandler(String name, JSONObject data, JsBridgeJsCallbackHandler handler) {
+        mJsCallbackHandlers.put(name, handler);
+        loadUrl("javascript:window.jsBridgeWebView._callJsHandler('" + name + "','" + data.toString() + "')");
     }
 
     @Override

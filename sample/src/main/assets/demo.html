@@ -1,17 +1,37 @@
 <!DOCTYPE html>
 <html>
     <body>
-        <div id="responsePanel"></div>
         <Button onclick="onCallNativeButtonClicked()">Call Native</Button>
     </body>
 
     <script type="text/javascript">
-        function onCallNativeButtonClicked() {
-          setupJsBridgeWebView(function(bridge) {
-            bridge.callHandler("callNative", null, function(response) {
-                document.getElementById("responsePanel").innerHTML = JSON.stringify(response);
-            });
-          });
+      function setupJsBridgeWebView(callback) {
+        if (window.jsBridgeWebView) {
+          callback(window.jsBridgeWebView);
+        } else {
+          document.addEventListener(
+            'jsBridgeWebViewReady',
+            function() {
+              callback(window.jsBridgeWebView);
+            },
+            false
+          );
         }
+      };
+
+      function onCallNativeButtonClicked() {
+        setupJsBridgeWebView(function(bridge) {
+          bridge.callHandler("callNative", {"message": "Request from JavaScript"}, function(response) {
+             alert(JSON.stringify(response));
+          });
+        });
+      }
+
+      setupJsBridgeWebView(function(bridge) {
+        bridge.registerHandler("callJavaScript", function(data, callback) {
+            alert(JSON.stringify(data));
+            callback({"message": "Response from JavaScript"});
+        });
+      });
     </script>
 </html>
