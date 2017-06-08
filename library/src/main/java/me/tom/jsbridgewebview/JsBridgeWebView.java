@@ -86,7 +86,6 @@ public class JsBridgeWebView extends WebView {
                         }
                     }
                 });
-
             }
         }, "jsBridgeWebViewInterface");
     }
