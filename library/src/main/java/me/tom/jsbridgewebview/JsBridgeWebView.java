@@ -21,15 +21,21 @@ public class JsBridgeWebView extends WebView {
     private HashMap<String, JsBridgeJsCallbackHandler> mJsCallbackHandlers;
 
     public JsBridgeWebView(Context context) {
-        this(context, null);
+        super(context);
+        init();
     }
 
     public JsBridgeWebView(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
+        super(context, attrs);
+        init();
     }
 
     public JsBridgeWebView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        init();
+    }
+
+    private void init() {
         mNativeHandlers = new HashMap<>();
         mJsCallbackHandlers = new HashMap<>();
         getSettings().setJavaScriptEnabled(true);
