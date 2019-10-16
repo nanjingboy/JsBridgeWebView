@@ -60,11 +60,8 @@ public class JsBridgeWebView extends WebView {
                                         JsBridgeWebView.this,
                                         options.getString("callbackId")
                                 );
-                                if (options.isNull("arguments")) {
-                                    mNativeHandlers.get(name).handler(null, callBack);
-                                } else {
-                                    mNativeHandlers.get(name).handler(options.getJSONObject("arguments"), callBack);
-                                }
+                                mNativeHandlers.get(name).handler(options.get("arguments"), callBack);
+
                             }
                         } catch (JSONException e) {
                         }
@@ -100,9 +97,13 @@ public class JsBridgeWebView extends WebView {
         mNativeHandlers.put(name, handler);
     }
 
-    public void callHandler(String name, JSONObject data, JsBridgeJsCallbackHandler handler) {
+    public void callHandler(String name, Object data, JsBridgeJsCallbackHandler handler) {
         mJsCallbackHandlers.put(name, handler);
-        loadUrl("javascript:window.jsBridgeWebView._callJsHandler('" + name + "','" + data.toString() + "')");
+        if (data == null) {
+            loadUrl("javascript:window.jsBridgeWebView._callJsHandler('" + name + "',null)");
+        } else {
+            loadUrl("javascript:window.jsBridgeWebView._callJsHandler('" + name + "','" + data.toString() + "')");
+        }
     }
 
     @Override

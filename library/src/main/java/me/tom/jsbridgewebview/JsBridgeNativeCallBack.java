@@ -1,6 +1,5 @@
 package me.tom.jsbridgewebview;
 
-import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 
@@ -14,14 +13,15 @@ public class JsBridgeNativeCallBack {
         mWebViewRef = new WeakReference<>(webView);
     }
 
-    public void onCallback(JSONObject data) {
+    public void onCallback(Object data) {
         JsBridgeWebView webView = mWebViewRef.get();
         if (webView == null) {
             return;
         }
         if (data == null) {
-            data = new JSONObject();
+            webView.loadUrl("javascript:window.jsBridgeWebView._nativeCallbackHandler(null,'" + mCallBackId + "')");
+        } else {
+            webView.loadUrl("javascript:window.jsBridgeWebView._nativeCallbackHandler('" + data.toString() + "','" + mCallBackId + "')");
         }
-        webView.loadUrl("javascript:window.jsBridgeWebView._nativeCallbackHandler('" + data.toString() + "','" + mCallBackId + "')");
     }
 }

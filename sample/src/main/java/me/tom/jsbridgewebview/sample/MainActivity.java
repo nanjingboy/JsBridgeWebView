@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         }
         mWebView.registerHandler("callNative", new JsBridgeNativeHandler() {
             @Override
-            public void handler(JSONObject data, JsBridgeNativeCallBack callBack) {
+            public void handler(Object data, JsBridgeNativeCallBack callBack) {
                 showMessage(data.toString());
                 try {
                     JSONObject response = new JSONObject();
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
                     data.put("message", "Request from Java");
                     mWebView.callHandler("callJavaScript", data, new JsBridgeJsCallbackHandler() {
                         @Override
-                        public void handler(JSONObject data) {
+                        public void handler(Object data) {
                             showMessage(data.toString());
                         }
                     });
