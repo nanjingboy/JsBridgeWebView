@@ -16,7 +16,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.github.nanjingboy:JsBridgeWebView:1.1.0'
+    compile 'com.github.nanjingboy:JsBridgeWebView:1.3.0'
 }
 ```
 
@@ -41,7 +41,7 @@ JsBridgeWebView webView = (JsBridgeWebView) findViewById(R.id.webView);
  */
 webView.registerHandler("callNative", new JsBridgeNativeHandler() {
     @Override
-    public void handler(JSONObject data, JsBridgeNativeCallBack callBack) {
+    public void handler(Object data, JsBridgeNativeCallBack callBack) {
         Log.d("Request from JavaScript:", data.toString());
         try {
             JSONObject response = new JSONObject();
@@ -59,7 +59,7 @@ JSONObject data = new JSONObject();
 data.put("message", "Request from Java");
 webView.callHandler("callJavaScript", data, new JsBridgeJsCallbackHandler() {
     @Override
-    public void handler(JSONObject data) {
+    public void handler(Object data) {
         Log.d("Response from JavaScript:", data.toString());
     }
 });
