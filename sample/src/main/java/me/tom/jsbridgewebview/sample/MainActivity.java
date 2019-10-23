@@ -1,12 +1,12 @@
 package me.tom.jsbridgewebview.sample;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,10 +25,10 @@ public class MainActivity extends AppCompatActivity {
     private JsBridgeWebView mWebView;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mWebView = (JsBridgeWebView) findViewById(R.id.webView);
+        mWebView = findViewById(R.id.webView);
         try {
             mWebView.loadDataWithBaseURL(null, getContent(), "text/html", "UTF-8", null);
         } catch (Exception e) {
@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void showMessage(String message) {
         Toast toast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
-        TextView textView = (TextView) toast.getView().findViewById(android.R.id.message);
+        TextView textView = toast.getView().findViewById(android.R.id.message);
         if (textView != null) {
             textView.setGravity(Gravity.CENTER);
         }
