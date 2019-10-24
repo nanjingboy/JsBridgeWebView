@@ -16,7 +16,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.github.nanjingboy:JsBridgeWebView:1.3.0'
+    implementation 'com.github.nanjingboy:JsBridgeWebView:1.3.1'
 }
 ```
 
