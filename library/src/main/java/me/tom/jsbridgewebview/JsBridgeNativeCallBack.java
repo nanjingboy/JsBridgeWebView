@@ -21,7 +21,7 @@ public class JsBridgeNativeCallBack {
         if (data == null) {
             webView.loadUrl("javascript:window.jsBridgeWebView._nativeCallbackHandler(null,'" + mCallBackId + "')");
         } else {
-            webView.loadUrl("javascript:window.jsBridgeWebView._nativeCallbackHandler('" + data.toString() + "','" + mCallBackId + "')");
+            webView.loadUrl("javascript:window.jsBridgeWebView._nativeCallbackHandler(" + data.toString() + ",'" + mCallBackId + "')");
         }
     }
 }

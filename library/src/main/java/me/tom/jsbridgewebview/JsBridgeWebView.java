@@ -102,7 +102,7 @@ public class JsBridgeWebView extends WebView {
         if (data == null) {
             loadUrl("javascript:window.jsBridgeWebView._callJsHandler('" + name + "',null)");
         } else {
-            loadUrl("javascript:window.jsBridgeWebView._callJsHandler('" + name + "','" + data.toString() + "')");
+            loadUrl("javascript:window.jsBridgeWebView._callJsHandler('" + name + "'," + data.toString() + ")");
         }
     }
 

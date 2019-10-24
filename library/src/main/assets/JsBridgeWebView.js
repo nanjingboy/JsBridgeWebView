@@ -29,7 +29,7 @@
      _nativeCallbackHandler: function(data, callbackId) {
        var callback = responseCallbacks[callbackId];
        if (typeof callback === 'function') {
-         callback(JSON.parse(data));
+         callback(data);
          delete(responseCallbacks[callbackId]);
        }
      },
@@ -37,7 +37,7 @@
      _callJsHandler: function(name, data) {
        var handler = handlers[name];
        if (typeof handler === 'function') {
-         handler(JSON.parse(data), function(response) {
+         handler(data, function(response) {
            var options = {
               name: name,
               response: response
