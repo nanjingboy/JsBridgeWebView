@@ -1,3 +1,7 @@
+## 1.3.2 2019-10-25
+
+* Fix the crash error while use androidx 1.1.0 webview in Android 5.0 & 5.1
+
 ## 1.3.1 2019-10-24
 
 * Fix JSON.parse error while response from native contains special char
