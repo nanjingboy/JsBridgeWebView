@@ -2,6 +2,8 @@ package me.tom.jsbridgewebview;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
@@ -10,29 +12,44 @@ import android.webkit.WebView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.HashMap;
 
 public class JsBridgeWebView extends WebView {
 
     private long mPreTouchTime;
 
+    private Context mContext;
     private HashMap<String, JsBridgeNativeHandler> mNativeHandlers;
     private HashMap<String, JsBridgeJsCallbackHandler> mJsCallbackHandlers;
 
+
     public JsBridgeWebView(Context context) {
-        super(context);
+        super(getFixedContext(context));
+        mContext = context;
         init();
     }
 
     public JsBridgeWebView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        super(getFixedContext(context), attrs);
+        mContext = context;
         init();
     }
 
     public JsBridgeWebView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
+        super(getFixedContext(context), attrs, defStyle);
+        mContext = context;
         init();
+    }
+
+
+    /**
+     * Fix the crash error while use androidx 1.1.0 webview in Android 5.0 & 5.1
+     */
+    private static Context getFixedContext(Context context) {
+        if (Build.VERSION.SDK_INT >= 21 && Build.VERSION.SDK_INT < 23) {
+            return context.createConfigurationContext(new Configuration());
+        }
+        return context;
     }
 
     private void init() {
@@ -49,7 +66,7 @@ public class JsBridgeWebView extends WebView {
             @Override
             @JavascriptInterface
             public void callNativeHandler(final String data) {
-                ((Activity) getContext()).runOnUiThread(new Runnable() {
+                ((Activity) mContext).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
@@ -72,7 +89,7 @@ public class JsBridgeWebView extends WebView {
             @Override
             @JavascriptInterface
             public void jsCallbackHandler(final String data) {
-                ((Activity) getContext()).runOnUiThread(new Runnable() {
+                ((Activity) mContext).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
